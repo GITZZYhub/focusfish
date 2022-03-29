@@ -1,0 +1,6 @@
+package com.bwjh.focusfish
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}

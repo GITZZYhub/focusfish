@@ -1,0 +1,26 @@
+name: localization
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ">=2.14.3 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations: # 国际化
+    sdk: flutter
+
+  intl: ^0.17.0 # 国际化
+  flutter_localized_locales: ^2.0.3 # 国际化
+  csv: ^5.0.1 # 表格读取
+  common:
+    path: ../common
+    
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.4
+
+flutter:
+  generate: true

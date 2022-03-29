@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--下载-->
+    <external-path path="Download/" name="download_files" />
+    <external-path path="Documents/" name="documents_files" />
+
+    <external-files-path path="." name="app_file_path"/>
+    <external-cache-path path="." name="app_cache_path"/>
+
+    <files-path path="." name="app_file_path_nosd"/>
+</paths>

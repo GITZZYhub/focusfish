@@ -1,0 +1,11 @@
+/* 
+  InfoPlist.strings
+  Runner
+
+  Created by tozmart on 2022/3/15.
+  
+*/
+CFBundleDisplayName = "專注魚";
+NSCameraUsageDescription = "是否允許此App使用你的相機？";
+NSPhotoLibraryUsageDescription = "是否允許此App訪問相冊？";
+NSLocalNetworkUsageDescription = "是否允許此App訪問本地網絡？";

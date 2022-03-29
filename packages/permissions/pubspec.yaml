@@ -1,0 +1,17 @@
+name: permissions
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ">=2.14.3 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  permission_handler: ^9.2.0
+  my_logger:
+    path: ../my_logger # 日志打印工具
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.4

@@ -1,0 +1,33 @@
+Key,en,ja,zh_CN,zh_TW
+app_name,FocusFish,FocusFish,专注鱼,專注魚
+enter_app,Enter App,アプリを起動します,进入应用,進入應用
+loading_text,Loading...,読み込み中...,正在加载...,正在加載...
+company_info,"Copyright © 2022 FocusFish. All Rights Reserved.","Copyright © 2022 FocusFish. All Rights Reserved.","Copyright © 2022 FocusFish. All Rights Reserved.","Copyright © 2022 FocusFish. All Rights Reserved."
+init_data_failed,"Initialize data failed, please check your internet connection and restart the app.",データの初期化に失敗しました。ネットワーク接続が正常かどうかを確認し、アプリケーションを再起動してください,数据初始化失败，请检查您的网络连接是否正常并重启应用,數據初始化失敗，請檢查您的網絡連接是否正常並重啓應用
+tips,Tips,ヒント,温馨提示,溫馨提示
+confirm,Confirm,はい,确认,確認
+cancel,Cancel,キャンセル,取消,取消
+skip,Skip,をスキップ,跳过,跳過
+start,Start,スタート,开始,開始
+data_parse_exception,Data parsing error,データ解析エラー,数据解析错误,數據解析錯誤
+connect_exception,"Network is abnormal, please check your internet connection",ネットワークの接続を確認するか、後でもう一度実行してください。,网络连接异常，请检查您的网络状态,網絡連接異常，請檢查您的網絡狀態
+socket_time_out_exception,"Connection time out, please check your internet connection",ネットワーク接続がタイムアウトしました、接続の状態を確認してください。,网络连接超时，请检查您的网络状态,網絡連接超時，請檢查您的網絡狀態
+unknown_host_exception,"Network is abnormal, please check your internet connection",ネットワークの接続を確認するか、後でもう一度実行してください。,网络连接异常，请检查您的网络状态,網絡連接異常，請檢查您的網絡狀態
+server_error,Server error,サーバーにエラーが発生しました。,服务器发生错误,服務器發生錯誤
+network_address_not_exist,Request address does not exist,リクエストアドレスが存在しません。,请求地址不存在,請求地址不存在
+request_rejected,The request was rejected by the server,サーバーが要求を拒否しました。,请求被服务器拒绝,請求被服務器拒絕
+request_redirected,The request is redirected to another page,他のページにリダイレクトします。,请求被重定向到其他页面,請求被重定向到其他頁面
+unauthorized,Unauthorized,アクセス権限がありません。,未取得访问权限,未取得訪問權限
+invalid_request,Invalid request,リクエストが無効です,无效请求,無效請求
+wrong_phone_num,Wrong phone number,電話番号エラー,电话号码错误,電話號碼錯誤
+user_not_exist,This account has not been registered,アカウントは登録されていません,该账户尚未注册,該賬戶尚未註冊
+wrong_psw,Incorrect password,間違ったパスワード,密码不正确,密碼不正確
+login,Login,ログイン,登录,登錄
+login_with_phone_number,Log in with phone number,電話番号でログインする,使用电话号码登录,使用電話號碼登錄
+phone_number,Phone number,携帯電話番号,手机号码,手機號碼
+input_password,Password,パスワードを入力してください,请输入密码,請輸入密碼
+register_an_account,Register an account?,アカウントをお持ちでないでしょうか?,还没有账号?,還沒有賬號?
+sign_up_immediately,Sign up,今すぐ登録,立即注册,立即註冊
+forgot_password,Forgot Password?,パスワードを忘れた?,忘记密码?,忘記密碼?
+choose_country,Choose Country/Region,国または地域を選択してください,选择国家或地区,選擇國家或地區
+search,Search,検索,搜索,搜索

@@ -1,0 +1,35 @@
+name: resources
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ">=2.14.3 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_screenutil: ^5.3.1 # 屏幕适配
+  flutter_svg: ^1.0.3 #加载svg图片
+  transparent_image: ^2.0.0 #缓存占位图
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.4
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/images/launch_image.png
+    - assets/images/launch_image_dark.png
+    - assets/images/guide_1_cn.jpg
+    - assets/images/guide_2_cn.jpg
+    - assets/images/guide_3_cn.jpg
+    - assets/images/guide_1_en.jpg
+    - assets/images/guide_2_en.jpg
+    - assets/images/guide_3_en.jpg
+    - assets/images/guide_1_tr.jpg
+    - assets/images/guide_2_tr.jpg
+    - assets/images/guide_3_tr.jpg
+    - assets/svg/

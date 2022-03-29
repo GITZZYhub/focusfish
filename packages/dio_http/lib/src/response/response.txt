@@ -1,0 +1,84 @@
+{
+  "result": {
+    "code": 52,
+    "codeDesc": "Exists Already",
+    "message": "exists user with identityType: 10 and identifier: fc63d5707855e001bc654f128ea67d43",
+    "codeUrl": ""
+  },
+  "idUser": null,
+  "nickname": null,
+  "avatar": null,
+  "firstname": null,
+  "lastname": null,
+  "gender": null,
+  "birthday": null,
+  "height": null,
+  "weight": null,
+  "weightDetail": null,
+  "email": null,
+  "userType": null,
+  "hasLocalAuth": null,
+  "org": null,
+  "token": null
+}
+{
+  "result": {
+    "code": 0,
+    "codeDesc": "Success",
+    "message": "",
+    "codeUrl": ""
+  },
+  "data": [
+    {
+      "adId": 1,
+      "imgUrl": "https://www.emtailor.com/imeas_asset/ad/991538039472_.pic_hd.jpg",
+      "adVersion": 1,
+      "active": 0
+    }
+  ]
+}
+{
+  "result": {
+    "code": "0",
+    "codeDesc": "Success",
+    "message": "",
+    "codeUrl": ""
+  },
+  "data": [
+    {
+      "adId": 1,
+      "imgUrl": "https://www.emtailor.com/imeas_asset/ad/991538039472_.pic_hd.jpg",
+      "adVersion": 1,
+      "active": 0
+    }
+  ]
+}
+{
+  "code": "0",
+  "codeDesc": "Success",
+  "message": "",
+  "codeUrl": "",
+  "data": [
+    {
+      "adId": 1,
+      "imgUrl": "https://www.emtailor.com/imeas_asset/ad/991538039472_.pic_hd.jpg",
+      "adVersion": 1,
+      "active": 0
+    }
+  ]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
