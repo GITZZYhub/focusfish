@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:common/constants/sever_keys.dart';
 import 'package:common/controller/base_controller.dart';
 import 'package:common/utils/time_util.dart';
 import 'package:common/widgets/dialog.dart';
 import 'package:getx/getx.dart';
 import 'package:localization/localization.dart';
+import 'package:my_logger/my_logger.dart';
 
 import '../../../../../routes/routes.dart';
 import '../../splash.dart';
@@ -30,9 +32,13 @@ class SplashController extends BaseController {
   ///获取app的初始化数据
   Future<void> _initAppData() async {
     _enterNextPage();
-    // final queryParameters = {'': ''};
+    // final queryParameters = <String, dynamic>{};
+    // queryParameters[ServerKeys.client] = 'APP';
+    // queryParameters[ServerKeys.grantType] = 'open_wechat';
+    // queryParameters[ServerKeys.appid] = '';
+    // queryParameters[ServerKeys.code] = 0;
     // await repository
-    //     .initData('requestUrl', queryParameters)
+    //     .requestToken('/oauth/token', queryParameters)
     //     .then((final value) {
     //   _enterNextPage();
     // }).catchError((final error) {

@@ -7,6 +7,7 @@ import '../../rest.dart';
 class RestView extends GetView<RestController> {
   @override
   Widget build(final BuildContext context) => Scaffold(
+        backgroundColor: Colors.indigoAccent,
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.fromLTRB(
@@ -20,7 +21,10 @@ class RestView extends GetView<RestController> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back_ios),
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                    ),
                     onPressed: () {
                       controller.goBack();
                     },
@@ -30,11 +34,17 @@ class RestView extends GetView<RestController> {
                   height: dim30h,
                 ),
                 const Center(
-                  child: Text('剩余休息时间：'),
+                  child: Text(
+                    '剩余休息时间：',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 Obx(
                   () => Center(
-                    child: Text(controller.time.value),
+                    child: Text(
+                      controller.time.value,
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -54,10 +64,16 @@ class RestView extends GetView<RestController> {
                   ),
                 ),
                 const Center(
-                  child: Text('休息完成'),
+                  child: Text(
+                    '休息完成',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 const Center(
-                  child: Text('将自动开始专注'),
+                  child: Text(
+                    '将自动开始专注',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),

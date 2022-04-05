@@ -84,7 +84,7 @@ class ColorRes {
   static const Color cursorColor = Color(0xff007aff);
   static const Color errorColor = Color(0xffff3b30);
   static const Color errorColorVariant = Color(0xffff0000);
-  static const Color textButtonColor = Color(0xFF007aff);
+  static const Color textButtonColor = Color(0xff627cfa);
   static const Color iconForwardColor = Color(0xFFC7C7CC);
   static Color itemDividerColor = Colors.grey.shade300;
   static Color tipsColor = Colors.blueAccent;

@@ -19,7 +19,7 @@ void setAppEnv(final AppEnv env) {
 
 /// 获取当前app环境
 AppEnv getCurrentAppEnv() {
-  final env = SPUtils.getInstance().getAppEnv(_prod);
+  final env = SPUtils.getInstance().getAppEnv(_dev);
   switch (env) {
     case _prod:
       logCommonInfo(info: '当前处于生产环境', needStack: false);

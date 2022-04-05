@@ -9,33 +9,18 @@ import '../../resources.dart';
 class GetImage {
   GetImage._();
 
-  static Image getAssetsImage(final String imageName, {final BoxFit? fit}) =>
-      Image.asset(
-        imageName,
-        package: 'resources',
-        width: double.infinity,
-        height: double.infinity,
-        fit: fit ?? BoxFit.contain,
-      );
-
-  static Image getAssetsImageWithWidth(
-    final String imageName,
-    final double? width,
-  ) =>
-      Image.asset(
-        imageName,
-        package: 'resources',
-        width: width,
-      );
-
-  static Image getAssetsImageWithHeight({
-    required final String imageName,
-    required final double height,
+  static Image getAssetsImage(
+    final String imageName, {
+    final BoxFit? fit,
+    required final double? height,
+    required final double? width,
   }) =>
       Image.asset(
         imageName,
         package: 'resources',
-        height: height,
+        width: width ?? double.infinity,
+        height: height ?? double.infinity,
+        fit: fit ?? BoxFit.contain,
       );
 
   static DecorationImage getDecorationImage(

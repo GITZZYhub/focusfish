@@ -1,10 +1,8 @@
-import 'package:common/constants/sever_keys.dart';
 import 'package:common/utils/login_util.dart';
 import 'package:common/utils/sp_utils/sp_utils.dart';
 import 'package:common/utils/toast_util.dart';
 import 'package:common/widgets/dialog.dart';
 import 'package:dio_http/dio_http.dart';
-import 'package:eventbus/eventbus.dart';
 import 'package:flutter/material.dart';
 import 'package:getx/getx.dart';
 import 'package:localization/localization.dart';
@@ -13,7 +11,6 @@ import 'package:my_logger/my_logger.dart';
 import '../../../../../routes/app_pages.dart';
 import '../../../base_account/presentation/controllers/base_account_controller.dart';
 import '../../data/login_repository.dart';
-import '../../event/event.dart';
 
 class LoginController extends BaseAccountController {
   LoginController({required final this.repository})
@@ -39,10 +36,10 @@ class LoginController extends BaseAccountController {
   final passwordVerifyFailureText = ''.obs;
 
   ///监听登陆按钮是否可以点击
-  final isLoginButtonEnable = false.obs;
+  final isLoginButtonEnable = true.obs;
 
   @override
-  Future<void> onInit() async {
+  void onInit() {
     super.onInit();
 
     ///监听手机号码输入
@@ -117,13 +114,15 @@ class LoginController extends BaseAccountController {
 
   ///登录
   void login(final BuildContext context) {
+    Get.offNamed<dynamic>(Routes.home);
+    return;
     if (_verifyAccountInfoIsSuccess()) {
       _refreshAccountErrorTips();
       _isShowingDialog = showRequestLoading(context);
       final queryParameters = <String, dynamic>{};
-      queryParameters[ServerKeys.identifier] =
-          '$areaCode:${phoneController.text}';
-      queryParameters[ServerKeys.credential] = passwordController.text;
+      // queryParameters[ServerKeys.identifier] =
+      //     '$areaCode:${phoneController.text}';
+      // queryParameters[ServerKeys.credential] = passwordController.text;
       if (!isClosed) {
         sendLoginRequest(
           context,

@@ -2,7 +2,7 @@ import '../splash.dart';
 import 'entity/init_data.dart';
 
 abstract class ISplashRepository {
-  Future<InitData> initData(
+  Future<InitData> requestToken(
     final String requestUrl,
     final Map<String, dynamic> queryParameters,
   );
@@ -16,12 +16,15 @@ class SplashRepository implements ISplashRepository {
   final SplashProvider provider;
 
   @override
-  Future<InitData> initData(
-    final String requestUrl,
+  Future<InitData> requestToken(
+    final String requestUri,
     final Map<String, dynamic> queryParameters,
   ) async {
     try {
-      final response = await provider.initData(requestUrl, queryParameters);
+      final response = await provider.requestToken(
+        requestUri,
+        queryParameters,
+      );
       if (response.ok) {
         return InitData.fromJson(response.data);
       } else {

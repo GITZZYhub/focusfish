@@ -1,9 +1,9 @@
 import 'package:common/controller/base_controller.dart';
 import 'package:common/utils/time_util.dart';
-import 'package:focus_fish/routes/app_pages.dart';
 import 'package:getx/getx.dart';
 import 'package:pausable_timer/pausable_timer.dart';
 
+import '../../../../../routes/app_pages.dart';
 import '../../rest.dart';
 
 class RestController extends BaseController {

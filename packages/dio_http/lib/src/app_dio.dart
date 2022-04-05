@@ -12,6 +12,7 @@ class AppDio extends DioMixin implements Dio {
     options ??= BaseOptions(
       baseUrl: dioConfig?.baseUrl ?? '',
       contentType: 'application/json',
+      headers: {'Authorization': 'Bearer $options'},
       connectTimeout: dioConfig?.connectTimeout,
       sendTimeout: dioConfig?.sendTimeout,
       receiveTimeout: dioConfig?.receiveTimeout,

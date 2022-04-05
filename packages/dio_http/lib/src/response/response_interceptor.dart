@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:getx/getx.dart' hide Response;
 import 'package:localization/localization.dart';
 import 'package:my_logger/my_logger.dart';
@@ -19,8 +18,7 @@ class ResponseInterceptor extends Interceptor {
     final responseData = response.data['data'];
     if (responseCode != null) {
       // 响应结果含有code
-      if (responseCode == ServerCode.success ||
-          responseCode == ServerCode.success_0) {
+      if (responseCode == ServerCode.success) {
         // 响应成功
         _parseResponse(
           response,
@@ -52,8 +50,7 @@ class ResponseInterceptor extends Interceptor {
       responseCode = response.data['result']['code'];
       responseCodeDesc = response.data['result']['codeDesc'];
 
-      if (responseCode == ServerCode.success ||
-          responseCode == ServerCode.success_0) {
+      if (responseCode == ServerCode.success) {
         // 响应成功
         _parseResponse(
           response,

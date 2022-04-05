@@ -31,8 +31,6 @@ class LoginProvider extends BaseAccountProvider implements ILoginProvider {
     });
     return httpClient.post(
       '',
-      baseUrl: '',
-      configUrlKey: '',
       data: queryParameters,
       cancelToken: _loginToken,
     );

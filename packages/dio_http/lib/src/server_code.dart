@@ -1,6 +1,5 @@
 class ServerCode {
-  static const int success_0 = 0;
-  static const String success = '0';
+  static const String success = '200';
   static const String failure = '1';
   static const String missingRequiredArgs = '40';
   static const String invalideArgs = '41';

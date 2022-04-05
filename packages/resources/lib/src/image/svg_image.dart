@@ -47,4 +47,6 @@ class SvgImages {
   String svgFemaleGrey = 'assets/svg/svg_female_grey.svg';
   String svgMaleColor = 'assets/svg/svg_male_color.svg';
   String svgMaleGrey = 'assets/svg/svg_male_grey.svg';
+  String play = 'assets/svg/play.svg';
+  String pause = 'assets/svg/pause.svg';
 }

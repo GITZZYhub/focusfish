@@ -1,7 +1,4 @@
-import 'package:dio/dio.dart';
-
 import '../../dio_http.dart';
-import 'http_transformer.dart';
 import 'response/response_code.dart';
 
 class DefaultHttpTransformer extends HttpTransformer {

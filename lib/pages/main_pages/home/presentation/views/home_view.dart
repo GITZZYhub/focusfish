@@ -1,3 +1,4 @@
+import 'package:common/theme/theme_provider.dart';
 import 'package:common/utils/init_util.dart';
 import 'package:common/widgets/public_widget.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +14,13 @@ class HomeView extends GetView<HomeController> {
         length: controller.tabs.length,
         child: Scaffold(
           appBar: AppBar(
-            title: Text(AppLocalizations.of(context)!.app_name),
+            elevation: 0,
             bottom: TabBar(
               tabs: controller.tabs.map((final e) => Tab(text: e)).toList(),
+              isScrollable: true,
+              indicator: const BoxDecoration(),
+              labelPadding: EdgeInsets.all(dim14w),
+              unselectedLabelStyle: TextStyle(fontSize: caption),
             ),
           ),
           drawer: MyDrawer(
@@ -27,23 +32,30 @@ class HomeView extends GetView<HomeController> {
                 .map(
                   (final e) => KeepAliveWrapper(
                     child: SafeArea(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: dim30w,
-                          vertical: dim100h,
-                        ),
-                        child: Column(
-                          children: [
-                            GetImage.getSvgImage(R.svg.facebook, size: dim200w),
-                            const Spacer(),
-                            const Text('25:00'),
-                            ElevatedButton(
-                              onPressed: clickDebounce.clickDebounce(() {
-                                controller.gotoFocusPage();
-                              }),
-                              child: const Text('专注'),
-                            )
-                          ],
+                      child: Container(
+                        color: ThemeProvider.themeBackgroundColor.value,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: dim30w,
+                            vertical: dim100h,
+                          ),
+                          child: Column(
+                            children: [
+                              GetImage.getAssetsImage(
+                                R.png.treasureBox,
+                                width: dim100w,
+                                height: dim100h,
+                              ),
+                              const Spacer(),
+                              const Text('25:00'),
+                              ElevatedButton(
+                                onPressed: clickDebounce.clickDebounce(() {
+                                  controller.gotoFocusPage();
+                                }),
+                                child: const Text('专注'),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),

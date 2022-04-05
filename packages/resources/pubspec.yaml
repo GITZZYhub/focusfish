@@ -21,15 +21,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
-    - assets/images/launch_image.png
-    - assets/images/launch_image_dark.png
-    - assets/images/guide_1_cn.jpg
-    - assets/images/guide_2_cn.jpg
-    - assets/images/guide_3_cn.jpg
-    - assets/images/guide_1_en.jpg
-    - assets/images/guide_2_en.jpg
-    - assets/images/guide_3_en.jpg
-    - assets/images/guide_1_tr.jpg
-    - assets/images/guide_2_tr.jpg
-    - assets/images/guide_3_tr.jpg
     - assets/svg/

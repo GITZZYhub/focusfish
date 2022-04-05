@@ -1,8 +1,3 @@
-import 'dart:convert';
-
-import 'package:common/utils/sp_utils/sp_utils.dart';
-import 'package:my_logger/my_logger.dart';
-
 import '../dio_http.dart';
 import 'app_dio.dart';
 import 'http_parse.dart';
@@ -18,8 +13,7 @@ class HttpClient {
   Future<HttpResponse> get(
     final String uri, {
     final Map<String, dynamic>? queryParameters,
-    required final String? baseUrl,
-    required final String? configUrlKey,
+    final String? baseUrl,
     final Options? options,
     final CancelToken? cancelToken,
     final ProgressCallback? onReceiveProgress,
@@ -29,7 +23,6 @@ class HttpClient {
       final response = await _dio.get(
         uri,
         queryParameters: queryParameters,
-        options: _beforeRequestConfig(options, baseUrl, configUrlKey),
         cancelToken: cancelToken,
         onReceiveProgress: onReceiveProgress,
       );
@@ -44,8 +37,7 @@ class HttpClient {
     // ignore: type_annotate_public_apis
     final data,
     final Map<String, dynamic>? queryParameters,
-    required final String? baseUrl,
-    required final String? configUrlKey,
+    final String? baseUrl,
     final Options? options,
     final CancelToken? cancelToken,
     final ProgressCallback? onSendProgress,
@@ -53,100 +45,21 @@ class HttpClient {
     final HttpTransformer? httpTransformer,
   }) async {
     try {
+      if (baseUrl != null && baseUrl.isNotEmpty) {
+        _dio.options.baseUrl = baseUrl;
+      }
       final response = await _dio.post(
         uri,
         data: data,
         queryParameters: queryParameters,
-        options: _beforeRequestConfig(options, baseUrl, configUrlKey),
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
-      _reOrderConfigUrls(configUrlKey);
       return handleResponse(response, httpTransformer: httpTransformer);
     } on Exception catch (e) {
       return handleException(e);
     }
-  }
-
-  /// 在请求之前的配置
-  Options? _beforeRequestConfig(
-    final Options? options,
-    final String? baseUrl,
-    final String? configUrlKey,
-  ) {
-    if (baseUrl != null && baseUrl.isNotEmpty) {
-      _dio.options.baseUrl = baseUrl;
-    }
-    // configUrlKey不为空说明有可切换的url
-    if (configUrlKey != null && configUrlKey.isNotEmpty) {
-      final newOptions = options == null
-          ? Options(
-              extra: RetryOptions(
-                configUrlKey: configUrlKey,
-              ).toExtra(),
-            )
-          : (options.extra == null
-              ? options.copyWith(
-                  extra: RetryOptions(
-                    configUrlKey: configUrlKey,
-                  ).toExtra(),
-                )
-              : options.copyWith(
-                  extra: options.extra!
-                    ..addAll(
-                      RetryOptions(
-                        configUrlKey: configUrlKey,
-                      ).toExtra(),
-                    ),
-                ));
-      // 在这里初始化一下已请求过的URL，在retry拦截器里有用到
-      SPUtils.getInstance()
-          .getSharedPreferences()
-          ?.setString(requestedUrlKey, jsonEncode([]));
-
-      return newOptions;
-    }
-    return options;
-  }
-
-  /// 请求成功后，将本地存储的configUrls的顺序做调整
-  void _reOrderConfigUrls(final String? configUrlKey) {
-    final prefs = SPUtils.getInstance().getSharedPreferences();
-    final requestedUrlStr = prefs?.getString(requestedUrlKey);
-    if (requestedUrlStr == null) {
-      // 所有url都切换过并且均没有成功，则不需要重新配置
-      return;
-    }
-    final requestedUrls = jsonDecode(requestedUrlStr);
-    if (requestedUrls.length == 0) {
-      // 没有切换过其他url，不需要重新配置，将之前的缓存清空
-      prefs?.remove(requestedUrlKey);
-      return;
-    }
-    if (configUrlKey == null || configUrlKey.isEmpty) {
-      // 不需要重新配置
-      return;
-    }
-    // 剩下的情况就是已经发生过url的切换，需要重新配置
-    logHttpInfo(info: '_reOrderConfigUrls重新配置url', needStack: false);
-    final configUrlStr = prefs?.getString(configUrlKey);
-    final configUrls = jsonDecode(configUrlStr!);
-
-    // requestedUrls最后一个元素必定是请求成功的url，将configUrls与之对应的index之前所有元素移至列表尾
-    final index = configUrls.indexOf(requestedUrls.last);
-    final newConfigUrls = <String>[];
-    configUrls.asMap().forEach((final idx, final url) {
-      if (idx >= index) {
-        newConfigUrls.add(url);
-      }
-    });
-    configUrls.asMap().forEach((final idx, final url) {
-      if (idx < index) {
-        newConfigUrls.add(url);
-      }
-    });
-    prefs?.setString(configUrlKey, jsonEncode(newConfigUrls));
   }
 
   Future<HttpResponse> patch(

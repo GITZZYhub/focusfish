@@ -2,7 +2,7 @@ import 'package:common/utils/init_util.dart';
 import 'package:dio_http/dio_http.dart';
 
 abstract class ISplashProvider {
-  Future<HttpResponse> initData(
+  Future<HttpResponse> requestToken(
     final String requestUrl,
     final Map<String, dynamic> queryParameters,
   );
@@ -15,15 +15,13 @@ CancelToken? _cancelToken;
 
 class SplashProvider implements ISplashProvider {
   @override
-  Future<HttpResponse> initData(
-    final String requestUrl,
+  Future<HttpResponse> requestToken(
+    final String requestUri,
     final Map<String, dynamic> queryParameters,
   ) async =>
       httpClient.post(
-        requestUrl,
-        baseUrl: '',
-        configUrlKey: '',
-        data: queryParameters,
+        requestUri,
+        queryParameters: queryParameters,
         cancelToken: _cancelToken,
       );
 

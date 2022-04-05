@@ -124,7 +124,7 @@ class FocusController extends BaseController {
     );
     _streamSubscription = SensorPlugin.stream().listen((final event) {
       _angleX = jsonDecode(event)['X'].toDouble();
-      debugPrint('$_angleX');
+      // debugPrint('$_angleX');
     });
   }
 
