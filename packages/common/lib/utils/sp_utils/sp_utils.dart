@@ -51,7 +51,17 @@ class SPUtils {
     _prefs?.setBool(SPKeys.isFirstEnter, isFirstEnter);
   }
 
-  bool getFirstEnterState() => _prefs?.getBool(SPKeys.isFirstEnter) ?? true;
+  bool getFirstEnterState() => _prefs?.getBool(SPKeys.isFirstEnter) ?? false;
+
+  ///--------------------------------------------------------------------------
+
+  ///保存登录状态
+  //TODO 暂时用，后续使用数据库的用户信息来替代
+  void setIsLoggedIn({required final bool isLoggedIn}) {
+    _prefs?.setBool(SPKeys.isLoggedIn, isLoggedIn);
+  }
+
+  bool getIsLoggedIn() => _prefs?.getBool(SPKeys.isLoggedIn) ?? false;
 
   ///--------------------------------------------------------------------------
 

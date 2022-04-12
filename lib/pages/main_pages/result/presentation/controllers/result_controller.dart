@@ -1,6 +1,8 @@
 import 'package:common/constants/argument_keys.dart';
 import 'package:common/controller/base_controller.dart';
+import 'package:common/utils/time_util.dart';
 import 'package:getx/getx.dart';
+import 'package:pausable_timer/pausable_timer.dart';
 
 import '../../../../../routes/app_pages.dart';
 import '../../result.dart';
@@ -10,25 +12,51 @@ class ResultController extends BaseController {
 
   final IResultRepository resultRepository;
 
-  Map<String, dynamic>? _arguments;
+  //倒计时器
+  late final PausableTimer _timer;
 
-  String focusTime = '';
+  //倒计时总时间
+  final staticTime = 1 * 60;
+
+  //倒计时剩余时间
+  final countDown = 0.obs;
+
+  //ui显示的时间
+  final time = ''.obs;
 
   void goBack() {
     Get.back();
   }
 
-  void gotoNextPage() {
+  void gotoRest() {
     Get.offNamed(Routes.rest);
+  }
+
+  void gotoFocus() {
+    Get.offNamed(Routes.focus);
   }
 
   @override
   void onInit() {
     super.onInit();
-    _arguments = Get.arguments;
-    if (_arguments != null) {
-      focusTime = _arguments?[ArgumentKeys.focusTime];
-    }
+    countDown.value = staticTime;
+    time.value =
+        TimeUtil.convertTime(countDown.value ~/ 60, countDown.value % 60);
+    _timer = PausableTimer(const Duration(seconds: 1), () {
+      countDown.value--;
+      time.value =
+          TimeUtil.convertTime(countDown.value ~/ 60, countDown.value % 60);
+      if (countDown.value > 0) {
+        // we know the callback won't be called before the constructor ends, so
+        // it is safe to use !
+        _timer
+          ..reset()
+          ..start();
+      } else if (countDown.value == 0) {
+        gotoFocus();
+      }
+    })
+      ..start();
   }
 
   @override
@@ -38,6 +66,7 @@ class ResultController extends BaseController {
 
   @override
   void onClose() {
+    _timer.cancel();
     super.onClose();
   }
 }

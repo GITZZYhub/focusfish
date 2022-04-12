@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:getx/getx.dart';
+import 'package:local_notification/local_notification.dart';
 import 'package:my_logger/my_logger.dart';
 import 'package:my_sentry/sentry.dart';
 import 'package:native_string/native_string.dart';
@@ -17,7 +18,7 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
   );
-
+  await NotificationService().init();
   await _initSharedPreferences();
   _initHttp();
   await SentryFlutter.init(

@@ -35,17 +35,26 @@ class _BobbleWidgetState extends State<BobbleWidget>
     _getSize();
     _getPosition();
 
-    const bobbleLength = 4;
-    final maxRadiusPerBobble = _widgetSize!.height / bobbleLength * 0.5;
-    for (var index = 0; index < bobbleLength; index++) {
+    final bobbleContents = [
+      '5分钟冥想',
+      '3分钟正念',
+      '3分钟关爱自己',
+    ];
+    final maxRadiusPerBobble =
+        _widgetSize!.height / bobbleContents.length * 0.5;
+    for (var index = 0; index < bobbleContents.length; index++) {
       BobbleBean particle = BobbleBean();
-      particle.content = '5分钟冥想';
-      //获取随机透明度的白色颜色
-      particle.color = getRandomColor(_random);
+      particle.content = bobbleContents[index];
+      //获取随机透明度的颜色
+      particle.color = Colors.white; //getRandomColor(_random);
       //随机半径
       particle.radius = (_random.nextInt((maxRadiusPerBobble * 0.2).toInt()) +
               maxRadiusPerBobble)
           .toDouble();
+      //确保圆的直径不大于控件宽度的一半
+      particle.radius = particle.radius > _widgetSize!.width * 0.25
+          ? _widgetSize!.width * 0.25
+          : particle.radius;
 
       //计算圆点位置的边界
       Rect rect = Rect.fromLTRB(
@@ -58,13 +67,13 @@ class _BobbleWidgetState extends State<BobbleWidget>
         index % 2 == 0
             ? _widgetSize!.width / 2 - particle.radius
             : _widgetSize!.width - particle.radius,
-        index == bobbleLength - 1
+        index == bobbleContents.length - 1
             ? maxRadiusPerBobble * 2 * (index + 1) - particle.radius
             : maxRadiusPerBobble * 2 * (index + 1),
       );
       //指定一个随机位置
       particle.position = Offset(
-        _random.nextInt(rect.width.toInt()).toDouble() + rect.left,
+        (rect.width < 1 ? 0 : _random.nextInt(rect.width.toInt()).toDouble()) + rect.left,
         _random.nextInt(rect.height.toInt()).toDouble() + rect.top,
       );
       //集合保存

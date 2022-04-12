@@ -4,6 +4,7 @@ export 'src/after_layout.dart';
 export 'src/azlistview/index.dart';
 export 'src/flutter_slidable/flutter_slidable.dart';
 export 'src/gradient_circular_progress_indicator.dart';
+export 'src/holding_guesture/holding_gesture.dart';
 export 'src/rich_text_widget.dart';
 export 'src/scale_view.dart';
 export 'src/scrollable_positioned_list/scrollable_positioned_list.dart';

@@ -25,12 +25,12 @@ class VibratePlugin {
 
   static Future<void> vibrateWithPauses(final List<Duration> pauses) async {
     for (final d in pauses) {
-      await vibrate();
+      feedback(FeedbackType.error);
       //Because the native vibration is not awaited, we need to wait for
       //the vibration to end before launching another one
       await Future.delayed(_defaultVibrationDuration, () => {});
       await Future.delayed(d, () => {});
     }
-    await vibrate();
+    feedback(FeedbackType.error);
   }
 }

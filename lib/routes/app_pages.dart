@@ -5,7 +5,7 @@ import '../pages/account_pages/login/presentation/views/login_view.dart';
 import '../pages/main_pages/daily/daily.dart';
 import '../pages/main_pages/focus/focus.dart';
 import '../pages/main_pages/home/bindings/home_binding.dart';
-import '../pages/main_pages/home/presentation/views/home_view.dart';
+import '../pages/main_pages/home/presentation/views/views.dart';
 import '../pages/main_pages/my_data/my_data.dart';
 import '../pages/main_pages/rest/bindings/bindings.dart';
 import '../pages/main_pages/rest/presentation/presentation.dart';

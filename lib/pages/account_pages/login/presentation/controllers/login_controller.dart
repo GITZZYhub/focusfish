@@ -114,6 +114,7 @@ class LoginController extends BaseAccountController {
 
   ///登录
   void login(final BuildContext context) {
+    SPUtils.getInstance().setIsLoggedIn(isLoggedIn: true);
     Get.offNamed<dynamic>(Routes.home);
     return;
     if (_verifyAccountInfoIsSuccess()) {

@@ -32,6 +32,8 @@ dependencies:
     path: ../eventbus #eventbus包
   my_sentry:
     path: ../my_sentry # 错误日志收集工具
+  local_notification:
+    path: ../local_notification # 本地通知
 
   #自定义插件
   native_string:
@@ -40,6 +42,8 @@ dependencies:
     path: ../../sensor_plugin # 传感器插件
   vibrate_plugin:
     path: ../../vibrate_plugin # 震动插件
+  screen_brightness:
+    path: ../../screen_brightness # 屏幕亮度插件
 
   #第三方库
   shared_preferences: ^2.0.13

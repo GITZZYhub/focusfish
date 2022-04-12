@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:common/constants/sever_keys.dart';
 import 'package:common/controller/base_controller.dart';
+import 'package:common/utils/sp_utils/sp_utils.dart';
 import 'package:common/utils/time_util.dart';
 import 'package:common/widgets/dialog.dart';
 import 'package:getx/getx.dart';
@@ -31,7 +32,7 @@ class SplashController extends BaseController {
 
   ///获取app的初始化数据
   Future<void> _initAppData() async {
-    _enterNextPage();
+    _stayAndFinish();
     // final queryParameters = <String, dynamic>{};
     // queryParameters[ServerKeys.client] = 'APP';
     // queryParameters[ServerKeys.grantType] = 'open_wechat';
@@ -40,7 +41,7 @@ class SplashController extends BaseController {
     // await repository
     //     .requestToken('/oauth/token', queryParameters)
     //     .then((final value) {
-    //   _enterNextPage();
+    //   _stayAndFinish();
     // }).catchError((final error) {
     //   logHttpError(error: '${error.message}', needStack: true);
     //   _showTipsDialog();
@@ -72,19 +73,25 @@ class SplashController extends BaseController {
     }
   }
 
-  ///跳转到下一个页面
-  void _enterNextPage() {
+  ///开始页面倒计时，保证至少在此页面停留一定时间
+  void _stayAndFinish() {
     final currentMillis = TimeUtil.currentTimeMillis();
     final diffMillis = currentMillis - _startTime;
     if (diffMillis > _waitTime) {
-      _enterLoginPage();
+      _enterNextPage();
     } else {
       final delayTime = _waitTime - diffMillis;
-      Future.delayed(Duration(milliseconds: delayTime), _enterLoginPage);
+      Future.delayed(
+        Duration(milliseconds: delayTime),
+        _enterNextPage,
+      );
     }
   }
 
-  void _enterLoginPage() {
-    Get.offNamed<dynamic>(Routes.login);
+  ///跳转到下一个页面
+  void _enterNextPage() {
+    SPUtils.getInstance().getIsLoggedIn()
+        ? Get.offNamed<dynamic>(Routes.home)
+        : Get.offNamed<dynamic>(Routes.login);
   }
 }

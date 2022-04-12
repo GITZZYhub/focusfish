@@ -10,58 +10,130 @@ import '../../home.dart';
 
 class HomeView extends GetView<HomeController> {
   @override
-  Widget build(final BuildContext context) => DefaultTabController(
-        length: controller.tabs.length,
-        child: Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            bottom: TabBar(
-              tabs: controller.tabs.map((final e) => Tab(text: e)).toList(),
-              isScrollable: true,
-              indicator: const BoxDecoration(),
-              labelPadding: EdgeInsets.all(dim14w),
-              unselectedLabelStyle: TextStyle(fontSize: caption),
-            ),
-          ),
-          drawer: MyDrawer(
-            controller: controller,
-          ),
-          body: TabBarView(
-            //构建
-            children: controller.tabs
+  Widget build(final BuildContext context) => MyTabController(
+        controller: controller,
+      );
+}
+
+class MyTabController extends StatefulWidget {
+  const MyTabController({
+    final Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  final HomeController controller;
+
+  @override
+  MyTabControllerState createState() => MyTabControllerState();
+}
+
+class MyTabControllerState extends State<MyTabController>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      vsync: this,
+      length: widget.controller.tabs.length,
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _tabController.dispose();
+  }
+
+  @override
+  Widget build(final BuildContext context) => Scaffold(
+        backgroundColor: ThemeProvider.themeBackgroundColor.value,
+        appBar: AppBar(
+          elevation: 0,
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: widget.controller.tabs
                 .map(
-                  (final e) => KeepAliveWrapper(
-                    child: SafeArea(
-                      child: Container(
-                        color: ThemeProvider.themeBackgroundColor.value,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: dim30w,
-                            vertical: dim100h,
-                          ),
-                          child: Column(
-                            children: [
-                              GetImage.getAssetsImage(
-                                R.png.treasureBox,
-                                width: dim100w,
-                                height: dim100h,
-                              ),
-                              const Spacer(),
-                              const Text('25:00'),
-                              ElevatedButton(
-                                onPressed: clickDebounce.clickDebounce(() {
-                                  controller.gotoFocusPage();
-                                }),
-                                child: const Text('专注'),
-                              )
-                            ],
-                          ),
+                  (
+                    final label,
+                  ) =>
+                      Tab(
+                    child: Obx(
+                      () => Text(
+                        label,
+                        style: TextStyle(
+                          fontSize: widget.controller.tabIndex.value ==
+                                  widget.controller.tabs.indexOf(label)
+                              ? bodyText2
+                              : caption,
                         ),
                       ),
                     ),
                   ),
                 )
                 .toList(),
+            isScrollable: true,
+            indicator: const BoxDecoration(),
+            labelPadding: EdgeInsets.all(dim14w),
+          ),
+        ),
+        drawer: MyDrawer(
+          controller: widget.controller,
+        ),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              NotificationListener(
+                onNotification: (final scrollNotification) {
+                  // print('$scrollNotification');
+                  if (scrollNotification is ScrollUpdateNotification) {
+                    final progress = scrollNotification.metrics.pixels /
+                        scrollNotification.metrics.maxScrollExtent;
+                    debugPrint(progress.toString());
+                    final gapCount = widget.controller.tabs.length - 1;
+                    widget.controller.tabIndex.value =
+                        (progress + (1 / gapCount * 0.5)) ~/ (1 / gapCount);
+                  }
+                  return true;
+                },
+                child: TabBarView(
+                  controller: _tabController,
+                  children: widget.controller.tabs
+                      .map(
+                        (final e) => KeepAliveWrapper(
+                          child: Align(
+                            alignment: AlignmentDirectional.topCenter,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                top: dim100h,
+                              ),
+                              child: GetImage.getAssetsImage(
+                                widget.controller
+                                    .tabImgs[widget.controller.tabs.indexOf(e)],
+                                width: MediaQuery.of(context).size.width * 0.7,
+                                height: MediaQuery.of(context).size.width * 0.7,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+              Align(
+                alignment: AlignmentDirectional.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: dim200h),
+                  child: ElevatedButton(
+                    onPressed: clickDebounce.clickDebounce(() {
+                      widget.controller.gotoFocusPage();
+                    }),
+                    child: const Text('专注'),
+                  ),
+                ),
+              )
+            ],
           ),
         ),
       );
