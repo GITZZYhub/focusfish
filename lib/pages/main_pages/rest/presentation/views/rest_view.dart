@@ -1,3 +1,5 @@
+import 'package:common/audio_services/notifiers/notifiers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getx/getx.dart';
 import 'package:resources/resources.dart';
@@ -7,14 +9,14 @@ import '../../rest.dart';
 class RestView extends GetView<RestController> {
   @override
   Widget build(final BuildContext context) => Scaffold(
-        backgroundColor: Colors.indigoAccent,
+        backgroundColor: const Color(0xff1e232e),
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.fromLTRB(
-              dim40w,
+              dim60w,
               dim40h,
-              dim40w,
-              dim100h,
+              dim60w,
+              dim200h,
             ),
             child: Column(
               children: [
@@ -33,46 +35,50 @@ class RestView extends GetView<RestController> {
                 SizedBox(
                   height: dim30h,
                 ),
-                const Center(
-                  child: Text(
-                    '剩余休息时间：',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                Obx(
-                  () => Center(
-                    child: Text(
-                      controller.time.value,
-                      style: const TextStyle(color: Colors.white),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      '时间剩余：',
+                      style: TextStyle(color: Colors.white),
                     ),
-                  ),
+                    ValueListenableBuilder<ButtonState>(
+                      valueListenable:
+                          controller.audioManager.playButtonNotifier,
+                      builder: (final _, final value, final __) {
+                        switch (value) {
+                          case ButtonState.loading:
+                            return const CupertinoActivityIndicator();
+                          case ButtonState.paused:
+                          case ButtonState.playing:
+                            return ValueListenableBuilder<ProgressBarState>(
+                              valueListenable:
+                                  controller.audioManager.progressNotifier,
+                              builder: (final _, final value, final __) => Text(
+                                RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$')
+                                        .firstMatch(
+                                          '${value.total - value.current}',
+                                        )
+                                        ?.group(1) ??
+                                    '${value.total - value.current}',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            );
+                        }
+                      },
+                    ),
+                  ],
                 ),
                 Expanded(
-                  child: Container(
-                    width: dim300w,
-                    height: dim300h,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        width: dim2w,
-                      ),
-                    ),
-                    child: const Center(
-                      child: Text('5分钟冥想'),
-                    ),
+                  child: Image.asset(
+                    R.png.mantuoluo,
+                    package: 'resources',
                   ),
                 ),
-                const Center(
+                Center(
                   child: Text(
-                    '休息完成',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                const Center(
-                  child: Text(
-                    '将自动开始专注',
-                    style: TextStyle(color: Colors.white),
+                    controller.audioItem['title'] ?? '',
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
               ],

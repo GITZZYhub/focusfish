@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:common/constants/sever_keys.dart';
 import 'package:common/controller/base_controller.dart';
 import 'package:common/utils/sp_utils/sp_utils.dart';
@@ -9,6 +8,7 @@ import 'package:common/widgets/dialog.dart';
 import 'package:getx/getx.dart';
 import 'package:localization/localization.dart';
 import 'package:my_logger/my_logger.dart';
+import 'package:resources/resources.dart';
 
 import '../../../../../routes/routes.dart';
 import '../../splash.dart';
@@ -23,15 +23,31 @@ class SplashController extends BaseController {
   ///页面刚开始渲染时间
   int _startTime = 0;
 
+  final audioList = [
+    {
+      'title': '加深关注',
+      'url': 'asset:///audio/deep_focus.mp3',
+    },
+    {
+      'title': '自我关怀',
+      'url': 'asset:///audio/self_caring.mp3',
+    },
+    {
+      'title': '自在晨练',
+      'url': 'asset:///audio/self_exercise.mp3',
+    },
+  ];
+
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
     _startTime = TimeUtil.currentTimeMillis();
-    _initAppData();
+    await _initAppData();
   }
 
   ///获取app的初始化数据
   Future<void> _initAppData() async {
+    SPUtils.getInstance().setAudioList(audioList: audioList);
     _stayAndFinish();
     // final queryParameters = <String, dynamic>{};
     // queryParameters[ServerKeys.client] = 'APP';
@@ -50,8 +66,8 @@ class SplashController extends BaseController {
 
   @override
   void onClose() {
-    super.onClose();
     repository.cancelRequest();
+    super.onClose();
   }
 
   ///当获取APP的URL的配置失败时，弹出提示框

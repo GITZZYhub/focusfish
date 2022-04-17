@@ -1,3 +1,4 @@
+import 'package:common/audio_services/audio_manager.dart';
 import 'package:common/controller/base_controller.dart';
 import 'package:getx/getx.dart';
 import 'package:local_notification/local_notification.dart';
@@ -10,6 +11,8 @@ class HomeController extends BaseController {
   HomeController({required final this.homeRepository});
 
   final IHomeRepository homeRepository;
+
+  final AudioManager audioManager = Get.find<AudioManager>();
 
   final tabs = ['工作鱼', '学习鱼', '冥想鱼', '任意鱼'];
   final tabImgs = [R.png.working, R.png.learning, R.png.thinking, R.png.free];
@@ -28,12 +31,12 @@ class HomeController extends BaseController {
   }
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
   }
 
   @override
-  void onReady() {
+  Future<void> onReady() async {
     super.onReady();
     //开启通知监听
     NotificationService().configureSelectNotificationSubject((final payload) {
@@ -43,6 +46,7 @@ class HomeController extends BaseController {
 
   @override
   void onClose() {
+    audioManager.stop();
     NotificationService().dispose();
     super.onClose();
   }

@@ -1,3 +1,4 @@
+import 'package:common/audio_services/service_locator.dart';
 import 'package:common/env/app_env.dart';
 import 'package:common/utils/sp_utils/sp_utils.dart';
 import 'package:dio_http/dio_http.dart';
@@ -21,8 +22,9 @@ Future<void> main() async {
   await NotificationService().init();
   await _initSharedPreferences();
   _initHttp();
+  await setupServiceLocator();
   await SentryFlutter.init(
-        (final options) => options
+    (final options) => options
       ..dsn = NativeString.getString(SENTRY_DSN)
       ..debug = kDebugMode // 是否打印sentry日志
       ..environment = 'crash'

@@ -53,7 +53,7 @@ class FocusController extends BaseController {
   late final PausableTimer _timer;
 
   //倒计时总时间
-  final staticTime = 1 * 10;
+  final staticTime = 25 * 60;
 
   //倒计时剩余时间
   final countDown = 0.obs;

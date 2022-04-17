@@ -5,4 +5,5 @@ class SPKeys {
   static const String isFirstEnter = 'isFirstEnter';
   static const String isLoggedIn = 'isLoggedIn';
   static const String areaCode = 'areaCode';
+  static const String audioList = 'audioList';
 }

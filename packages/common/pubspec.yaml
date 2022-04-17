@@ -51,6 +51,9 @@ dependencies:
   lpinyin: ^2.0.3 #汉子转拼音
   pausable_timer: ^1.0.0+4 #可暂停的定时器
   fl_chart: ^0.46.0 #图表
+  just_audio: ^0.9.20 #语音播放
+  audio_session: ^0.1.6+1 #语音播放
+  audio_service: ^0.18.4 #后台语音播放
 
 dev_dependencies:
   build_runner: ^2.1.8

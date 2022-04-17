@@ -56,8 +56,14 @@ class ResultView extends GetView<ResultController> {
                     ),
                     child: BobbleWidget(
                       key: _bobbleWidgetKey,
-                      onClick: () {
-                        controller.gotoRest();
+                      audioTitle: controller.audioList
+                          .map(
+                            (final e) =>
+                                e['title'] == null ? '' : e['title'] as String,
+                          )
+                          .toList(),
+                      onClick: (final title) {
+                        controller.gotoRest(title);
                       },
                     ),
                   ),

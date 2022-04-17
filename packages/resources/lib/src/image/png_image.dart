@@ -6,4 +6,5 @@ class PngImages {
   String thinking = 'assets/images/thinking.png';
   String learning = 'assets/images/learning.png';
   String free = 'assets/images/free.png';
+  String mantuoluo = 'assets/images/mantuoluo.png';
 }

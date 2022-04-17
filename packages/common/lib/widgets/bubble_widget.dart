@@ -1,12 +1,16 @@
 import 'dart:math';
 
-import 'package:common/utils/common_utils.dart';
 import 'package:flutter/material.dart';
 
 class BobbleWidget extends StatefulWidget {
-  const BobbleWidget({Key? key, required this.onClick}) : super(key: key);
+  const BobbleWidget({
+    Key? key,
+    required this.audioTitle,
+    required this.onClick,
+  }) : super(key: key);
 
-  final Function() onClick;
+  final List<String> audioTitle;
+  final Function(String) onClick;
 
   @override
   _BobbleWidgetState createState() => _BobbleWidgetState();
@@ -35,16 +39,11 @@ class _BobbleWidgetState extends State<BobbleWidget>
     _getSize();
     _getPosition();
 
-    final bobbleContents = [
-      '5分钟冥想',
-      '3分钟正念',
-      '3分钟关爱自己',
-    ];
     final maxRadiusPerBobble =
-        _widgetSize!.height / bobbleContents.length * 0.5;
-    for (var index = 0; index < bobbleContents.length; index++) {
+        _widgetSize!.height / widget.audioTitle.length * 0.5;
+    for (var index = 0; index < widget.audioTitle.length; index++) {
       BobbleBean particle = BobbleBean();
-      particle.content = bobbleContents[index];
+      particle.content = widget.audioTitle[index];
       //获取随机透明度的颜色
       particle.color = Colors.white; //getRandomColor(_random);
       //随机半径
@@ -67,13 +66,14 @@ class _BobbleWidgetState extends State<BobbleWidget>
         index % 2 == 0
             ? _widgetSize!.width / 2 - particle.radius
             : _widgetSize!.width - particle.radius,
-        index == bobbleContents.length - 1
+        index == widget.audioTitle.length - 1
             ? maxRadiusPerBobble * 2 * (index + 1) - particle.radius
             : maxRadiusPerBobble * 2 * (index + 1),
       );
       //指定一个随机位置
       particle.position = Offset(
-        (rect.width < 1 ? 0 : _random.nextInt(rect.width.toInt()).toDouble()) + rect.left,
+        (rect.width < 1 ? 0 : _random.nextInt(rect.width.toInt()).toDouble()) +
+            rect.left,
         _random.nextInt(rect.height.toInt()).toDouble() + rect.top,
       );
       //集合保存
@@ -125,7 +125,7 @@ class _BobbleWidgetState extends State<BobbleWidget>
                         bobble.position.dy + bobble.radius &&
                     details.localPosition.dy >=
                         bobble.position.dy - bobble.radius) {
-                  widget.onClick();
+                  widget.onClick(bobble.content);
                 }
               });
             },

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'sp_keys.dart';
@@ -73,6 +75,16 @@ class SPUtils {
   }
 
   int getAreaCode() => _prefs?.getInt(SPKeys.areaCode) ?? 86;
+
+  ///--------------------------------------------------------------------------
+
+  ///保存audio列表
+  void setAudioList({required final List<Map<String, String>> audioList}) {
+    _prefs?.setString(SPKeys.audioList, jsonEncode(audioList));
+  }
+
+  List<dynamic> getAudioList() =>
+      jsonDecode(_prefs?.getString(SPKeys.audioList) ?? '');
 
   ///--------------------------------------------------------------------------
 }

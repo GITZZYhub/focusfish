@@ -129,6 +129,10 @@ class MyTabControllerState extends State<MyTabController>
                     onPressed: clickDebounce.clickDebounce(() {
                       widget.controller.gotoFocusPage();
                     }),
+                    style: ElevatedButton.styleFrom(
+                      fixedSize: Size(dim200w, dim200h),
+                      shape: const CircleBorder(),
+                    ),
                     child: const Text('专注'),
                   ),
                 ),

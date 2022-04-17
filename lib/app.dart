@@ -13,7 +13,7 @@ class App extends StatelessWidget {
   Widget build(final BuildContext context) => ScreenUtilInit(
         // 屏幕适配
         designSize: const Size(1080, 1920),
-        builder: () => GetMaterialApp(
+        builder: (final context) => GetMaterialApp(
           debugShowCheckedModeBanner: kDebugMode,
           enableLog: kDebugMode,
           logWriterCallback: GetxLogger.write,

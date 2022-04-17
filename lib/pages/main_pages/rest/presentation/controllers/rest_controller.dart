@@ -1,7 +1,12 @@
+import 'dart:async';
+
+import 'package:common/audio_services/audio_manager.dart';
+import 'package:common/constants/argument_keys.dart';
 import 'package:common/controller/base_controller.dart';
-import 'package:common/utils/time_util.dart';
+import 'package:common/event/audio_play_complete.dart';
+import 'package:common/utils/sp_utils/sp_utils.dart';
+import 'package:eventbus/eventbus.dart';
 import 'package:getx/getx.dart';
-import 'package:pausable_timer/pausable_timer.dart';
 
 import '../../../../../routes/app_pages.dart';
 import '../../rest.dart';
@@ -11,50 +16,52 @@ class RestController extends BaseController {
 
   final IRestRepository restRepository;
 
-  //倒计时器
-  late final PausableTimer _timer;
-  //倒计时总时间
-  final staticTime = 1 * 60;
-  //倒计时剩余时间
-  final countDown = 0.obs;
-  //ui显示的时间
-  final time = ''.obs;
+  final AudioManager audioManager = Get.find<AudioManager>();
+  late final List<dynamic> audioList;
+
+  int? currentDuration;
+  final timeRemain = 0.obs;
+
+  late final Map<String, dynamic> audioItem;
+
+  void gotoFocusPage() {
+    Get.offNamed(Routes.focus);
+  }
 
   void goBack() {
     Get.back();
   }
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
-    countDown.value = staticTime;
-    time.value =
-        TimeUtil.convertTime(countDown.value ~/ 60, countDown.value % 60);
-    _timer = PausableTimer(const Duration(seconds: 1), () {
-      countDown.value--;
-      time.value =
-          TimeUtil.convertTime(countDown.value ~/ 60, countDown.value % 60);
-      if (countDown.value > 0) {
-        // we know the callback won't be called before the constructor ends, so
-        // it is safe to use !
-        _timer
-          ..reset()
-          ..start();
-      } else if (countDown.value == 0) {
-        Get.offNamed(Routes.focus);
+    audioItem = Get.arguments[ArgumentKeys.audioItem];
+    audioList = SPUtils.getInstance().getAudioList();
+    await audioManager.init([audioItem]);
+    audioManager.play();
+    eventBus.on<AudioPlayCompleteEvent>().listen((final event) async {
+      //音频播放完成
+      if (!isClosed) {
+        gotoFocusPage();
       }
-    })
-      ..start();
+    });
   }
 
   @override
-  void onReady() {
-    super.onReady();
+  void onPaused() {
+    // audioManager.stop();
+    super.onPaused();
+  }
+
+  @override
+  void onResumed() {
+    // audioManager.play();
+    super.onResumed();
   }
 
   @override
   void onClose() {
-    _timer.cancel();
+    audioManager.stop();
     super.onClose();
   }
 }

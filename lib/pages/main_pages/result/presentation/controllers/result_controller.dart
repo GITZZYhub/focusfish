@@ -1,5 +1,6 @@
 import 'package:common/constants/argument_keys.dart';
 import 'package:common/controller/base_controller.dart';
+import 'package:common/utils/sp_utils/sp_utils.dart';
 import 'package:common/utils/time_util.dart';
 import 'package:getx/getx.dart';
 import 'package:pausable_timer/pausable_timer.dart';
@@ -12,11 +13,13 @@ class ResultController extends BaseController {
 
   final IResultRepository resultRepository;
 
+  late final List<dynamic> audioList;
+
   //倒计时器
   late final PausableTimer _timer;
 
   //倒计时总时间
-  final staticTime = 1 * 60;
+  final staticTime = 5 * 60;
 
   //倒计时剩余时间
   final countDown = 0.obs;
@@ -28,8 +31,12 @@ class ResultController extends BaseController {
     Get.back();
   }
 
-  void gotoRest() {
-    Get.offNamed(Routes.rest);
+  void gotoRest(final String audioTitle) {
+    final arguments = {
+      ArgumentKeys.audioItem: audioList
+          .firstWhere((final element) => element['title'] == audioTitle),
+    };
+    Get.offNamed(Routes.rest, arguments: arguments);
   }
 
   void gotoFocus() {
@@ -37,8 +44,13 @@ class ResultController extends BaseController {
   }
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
+    audioList = SPUtils.getInstance().getAudioList();
+    _initTimer();
+  }
+
+  void _initTimer() {
     countDown.value = staticTime;
     time.value =
         TimeUtil.convertTime(countDown.value ~/ 60, countDown.value % 60);
@@ -60,7 +72,7 @@ class ResultController extends BaseController {
   }
 
   @override
-  void onReady() {
+  Future<void> onReady() async {
     super.onReady();
   }
 
