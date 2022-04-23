@@ -157,4 +157,22 @@ void FLTHostScreenBrightnessApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
       [channel setMessageHandler:nil];
     }
   }
+  {
+    FlutterBasicMessageChannel *channel =
+      [[FlutterBasicMessageChannel alloc]
+        initWithName:@"dev.flutter.pigeon.HostScreenBrightnessApi.isScreenLocked"
+        binaryMessenger:binaryMessenger
+        codec:FLTHostScreenBrightnessApiGetCodec()        ];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(isScreenLockedWithError:)], @"FLTHostScreenBrightnessApi api (%@) doesn't respond to @selector(isScreenLockedWithError:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        FlutterError *error;
+        NSNumber *output = [api isScreenLockedWithError:&error];
+        callback(wrapResult(output, error));
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
 }

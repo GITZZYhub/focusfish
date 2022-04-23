@@ -21,6 +21,8 @@ NSObject<FlutterMessageCodec> *FLTHostScreenBrightnessApiGetCodec(void);
 - (void)resetScreenBrightnessWithError:(FlutterError *_Nullable *_Nonnull)error;
 /// @return `nil` only when `error != nil`.
 - (nullable NSNumber *)hasChangedWithError:(FlutterError *_Nullable *_Nonnull)error;
+/// @return `nil` only when `error != nil`.
+- (nullable NSNumber *)isScreenLockedWithError:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
 extern void FLTHostScreenBrightnessApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FLTHostScreenBrightnessApi> *_Nullable api);

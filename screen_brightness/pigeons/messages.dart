@@ -42,4 +42,6 @@ abstract class HostScreenBrightnessApi {
   /// [ScreenBrightness.setScreenBrightness] will make this true
   /// [ScreenBrightness.resetScreenBrightness] will make this false
   bool hasChanged();
+
+  bool isScreenLocked();
 }

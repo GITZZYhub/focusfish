@@ -7,6 +7,7 @@ import 'package:common/event/audio_play_complete.dart';
 import 'package:common/utils/sp_utils/sp_utils.dart';
 import 'package:eventbus/eventbus.dart';
 import 'package:getx/getx.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../routes/app_pages.dart';
 import '../../rest.dart';
@@ -41,9 +42,17 @@ class RestController extends BaseController {
     audioManager.play();
     eventBus.on<AudioPlayCompleteEvent>().listen((final event) async {
       //音频播放完成
-      if (!isClosed) {
-        gotoFocusPage();
-      }
+      gotoFocusPage();
+      //休息次数+1
+      SPUtils.getInstance()
+          .setRestCount(restCount: SPUtils.getInstance().getRestCount() + 1);
+      //记录专注&休息开始和结束时间
+      SPUtils.getInstance().setRestStartTime(
+        restStartTime: SPUtils.getInstance().getRestStartTimeTemp(),
+      );
+      SPUtils.getInstance().setRestEndTime(
+        restEndTime: DateFormat('MM-dd HH:mm').format(DateTime.now()),
+      );
     });
   }
 

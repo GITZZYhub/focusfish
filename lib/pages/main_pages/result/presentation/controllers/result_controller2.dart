@@ -2,8 +2,8 @@ import 'package:common/constants/argument_keys.dart';
 import 'package:common/controller/base_controller.dart';
 import 'package:common/utils/sp_utils/sp_utils.dart';
 import 'package:common/utils/time_util.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:getx/getx.dart';
+import 'package:pausable_timer/pausable_timer.dart';
 
 import '../../../../../routes/app_pages.dart';
 import '../../result.dart';
@@ -13,9 +13,10 @@ class ResultController extends BaseController {
 
   final IResultRepository resultRepository;
 
-  final _service = FlutterBackgroundService();
-
   late final List<dynamic> audioList;
+
+  //倒计时器
+  late final PausableTimer _timer;
 
   //倒计时总时间
   final staticTime = 5 * 60;
@@ -53,19 +54,21 @@ class ResultController extends BaseController {
     countDown.value = staticTime;
     time.value =
         TimeUtil.convertTime(countDown.value ~/ 60, countDown.value % 60);
-    _service
-      ..invoke('startResultPageTimer')
-      ..on('resultPage').listen((final event) {
-        if (event == null) {
-          return;
-        }
-        countDown.value = staticTime - event['tick'] as int;
-        time.value =
-            TimeUtil.convertTime(countDown.value ~/ 60, countDown.value % 60);
-        if (countDown.value <= 0) {
-          gotoFocus();
-        }
-      });
+    _timer = PausableTimer(const Duration(seconds: 1), () {
+      countDown.value--;
+      time.value =
+          TimeUtil.convertTime(countDown.value ~/ 60, countDown.value % 60);
+      if (countDown.value > 0) {
+        // we know the callback won't be called before the constructor ends, so
+        // it is safe to use !
+        _timer
+          ..reset()
+          ..start();
+      } else if (countDown.value == 0) {
+        gotoFocus();
+      }
+    })
+      ..start();
   }
 
   @override
@@ -75,7 +78,7 @@ class ResultController extends BaseController {
 
   @override
   void onClose() {
-    _service.invoke('stopResultPageTimer');
+    _timer.cancel();
     super.onClose();
   }
 }

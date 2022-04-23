@@ -6,4 +6,8 @@ class SPKeys {
   static const String isLoggedIn = 'isLoggedIn';
   static const String areaCode = 'areaCode';
   static const String audioList = 'audioList';
+  static const String coins = 'coins';
+  static const String restStartTime = 'restStartTime';
+  static const String restEndTime = 'restEndTime';
+  static const String restCount = 'restCount';
 }

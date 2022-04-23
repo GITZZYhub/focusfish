@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:common/audio_services/service_locator.dart';
+import 'package:common/background_services/services.dart';
 import 'package:common/env/app_env.dart';
 import 'package:common/utils/sp_utils/sp_utils.dart';
 import 'package:dio_http/dio_http.dart';
@@ -23,6 +26,7 @@ Future<void> main() async {
   await _initSharedPreferences();
   _initHttp();
   await setupServiceLocator();
+  await initializeBackgroundService();
   await SentryFlutter.init(
     (final options) => options
       ..dsn = NativeString.getString(SENTRY_DSN)

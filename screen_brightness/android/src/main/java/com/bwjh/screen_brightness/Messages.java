@@ -33,6 +33,7 @@ public class Messages {
     void setScreenBrightness(@NonNull Double brightness);
     void resetScreenBrightness();
     @NonNull Boolean hasChanged();
+    @NonNull Boolean isScreenLocked();
 
     /** The codec used by HostScreenBrightnessApi. */
     static MessageCodec<Object> getCodec() {
@@ -130,6 +131,25 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               Boolean output = api.hasChanged();
+              wrapped.put("result", output);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.HostScreenBrightnessApi.isScreenLocked", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              Boolean output = api.isScreenLocked();
               wrapped.put("result", output);
             }
             catch (Error | RuntimeException exception) {

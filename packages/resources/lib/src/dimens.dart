@@ -113,12 +113,14 @@ double dim160w = 160.w;
 double dim176w = 176.w;
 double dim200w = 200.w;
 double dim230w = 230.w;
+double dim250w = 250.w;
 double dim270w = 270.w;
 double dim300w = 300.w;
 double dim320w = 320.w;
 double dim360w = 360.w;
 double dim380w = 380.w;
 double dim460w = 460.w;
+double dim500w = 500.w;
 
 //-------------------------------高度-------------------------------
 double dim1h = 1.h;
@@ -171,5 +173,6 @@ double dim360h = 360.h;
 double dim420h = 420.h;
 double dim450h = 450.h;
 double dim460h = 460.h;
+double dim500h = 500.h;
 double dim560h = 560.h;
-double dim860h = 560.h;
+double dim860h = 860.h;

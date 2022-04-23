@@ -1,4 +1,5 @@
 import 'package:common/widgets/bubble_widget.dart';
+import 'package:common/widgets/treasure_box_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:getx/getx.dart';
 import 'package:resources/resources.dart';
@@ -24,7 +25,10 @@ class ResultView extends GetView<ResultController> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back_ios),
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                    ),
                     onPressed: () {
                       controller.goBack();
                     },
@@ -54,7 +58,7 @@ class ResultView extends GetView<ResultController> {
                       horizontal: dim10w,
                       vertical: dim30h,
                     ),
-                    child: BobbleWidget(
+                    child: TreasureBoxWidget(
                       key: _bobbleWidgetKey,
                       audioTitle: controller.audioList
                           .map(

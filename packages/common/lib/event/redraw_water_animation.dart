@@ -1,0 +1,3 @@
+class RedrawWaterAnimationEvent {
+  RedrawWaterAnimationEvent();
+}

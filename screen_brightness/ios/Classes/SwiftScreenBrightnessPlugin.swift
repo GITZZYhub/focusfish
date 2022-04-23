@@ -27,6 +27,7 @@ public class SwiftScreenBrightnessPlugin: NSObject, FlutterPlugin, FlutterApplic
         let api = SwiftScreenBrightnessPlugin.init()
         eventChannel.setStreamHandler(api.currentBrightnessChangeStreamHandler)
         FLTHostScreenBrightnessApiSetup(messenger, api)
+        registrar.addApplicationDelegate(api)
     }
     
     override init() {
@@ -63,7 +64,7 @@ public class SwiftScreenBrightnessPlugin: NSObject, FlutterPlugin, FlutterApplic
             unowned let _unownedOperation = blockOperation
             blockOperation.addExecutionBlock({
                 if !_unownedOperation.isCancelled {
-                    Thread.sleep(forTimeInterval: 1 / 60.0)
+//                    Thread.sleep(forTimeInterval: 1 / 60.0)
                     DispatchQueue.main.async {
                         UIScreen.main.brightness = _brightness
                     }
@@ -87,6 +88,10 @@ public class SwiftScreenBrightnessPlugin: NSObject, FlutterPlugin, FlutterApplic
     
     public func hasChangedWithError(_ error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> NSNumber? {
         return NSNumber(value: changedBrightness != nil)
+    }
+    
+    public func isScreenLockedWithError(_ error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> NSNumber? {
+        return NSNumber(value: true)
     }
     
     @objc private func onSystemBrightnessChanged(notification: Notification) {

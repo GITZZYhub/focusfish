@@ -1,0 +1,3 @@
+class ShowAddCoinsDialogEvent {
+  ShowAddCoinsDialogEvent();
+}

@@ -2,6 +2,7 @@ package com.bwjh.screen_brightness
 
 import android.app.Activity
 import android.content.Context
+import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
@@ -206,6 +207,15 @@ class ScreenBrightnessPlugin : FlutterPlugin, EventChannel.StreamHandler,
 
     override fun hasChanged(): Boolean {
         return changedBrightness != null
+    }
+
+    override fun isScreenLocked(): Boolean {
+        val pm = activity!!.getSystemService(Context.POWER_SERVICE) as PowerManager
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+            !pm.isInteractive
+        } else {
+            !pm.isScreenOn
+        }
     }
 
     override fun setScreenBrightness(brightness: Double) {
