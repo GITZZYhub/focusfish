@@ -12,7 +12,7 @@ import '../../home.dart';
 class HomeView extends GetView<HomeController> {
   @override
   Widget build(final BuildContext context) => Scaffold(
-        backgroundColor: ThemeProvider.themeBackgroundColor.value,
+        backgroundColor: Colors.white,//ThemeProvider.themeBackgroundColor.value,
         appBar: AppBar(
           elevation: 0,
           actions: [

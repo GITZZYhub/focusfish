@@ -10,4 +10,6 @@ class SPKeys {
   static const String restStartTime = 'restStartTime';
   static const String restEndTime = 'restEndTime';
   static const String restCount = 'restCount';
+  static const String focusPausedTime = 'focusPausedTime';
+  static const String resultPausedTime = 'resultPausedTime';
 }

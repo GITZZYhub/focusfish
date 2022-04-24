@@ -36,15 +36,34 @@ class FocusController extends BaseController {
 
   final _service = FlutterBackgroundService();
 
+  // 记录手机姿态角度的计时器
+  Timer? _sensorTimer;
+
+  // 倒计时
+  Timer? _countDownTimer;
+
+  //长按倒计时
+  Timer? _longPressTimer;
+
+  // 过场动画的计时器
+  Timer? animateTimer;
+
+  // 中断的计时器
+  Timer? interruptTimer;
+
+  // 隐藏长按按钮计时器
+  Timer? _hideButtonTimer;
+
+  // 进入后台发送通知等待倒计时
+  // 消息通知5s后，没回到专注鱼，退出专注-退回到APP主页
+  Timer? _sendMsgTimer;
+
   final String fadeImage = Get.arguments[ArgumentKeys.focusFadeImage];
 
   double screenBrightness = 0.1;
 
   // 获取传感器的值
   StreamSubscription<dynamic>? _streamSubscription;
-
-  // 记录手机姿态角度的计时器
-  Timer? _sensorTimer;
 
   // 当前手机姿态角度，手机平放为-90
   double _angleX = 0;
@@ -59,7 +78,7 @@ class FocusController extends BaseController {
   final currentStatus = Status.hide_button.obs;
 
   //倒计时总时间
-  final staticTime = 25 * 60;
+  final _staticTime = 25 * 60;
 
   //倒计时剩余时间
   final countDown = 0.obs;
@@ -74,16 +93,10 @@ class FocusController extends BaseController {
 
   final circleProgressValue = 0.0.obs;
 
-  //长按倒计时
-  Timer? _longPressTimer;
-
   //倒计时是否已开始
   bool? _countDownTimerStarted;
 
   final plusTime = false.obs;
-
-  // 过场动画的计时器
-  Timer? animateTimer;
 
   // 过场动画的持续时间
   final int animateTime = 3;
@@ -93,28 +106,24 @@ class FocusController extends BaseController {
 
   final animateTimerFinish = false.obs;
 
-  // 中断的计时器
-  Timer? interruptTimer;
+  // 处于后台的时间长度
+  int backgroundLastTime = 0;
 
   //显示长按按钮
   Future<void> showButton({required final bool isPress}) async {
     currentStatus.value = Status.show_button;
-    _service
-      ..invoke('stopHideButtonTimer')
-      ..invoke('startHideButtonTimer')
-      ..on('hideButton').listen((final event) async {
-        if (event == null) {
-          return;
+    _hideButtonTimer?.cancel();
+    _hideButtonTimer =
+        Timer.periodic(const Duration(seconds: 1), (final timer) async {
+      if (timer.tick >= 5) {
+        if (currentStatus.value == Status.show_button) {
+          // 有可能是退到后台再回来，此时currentStatus已经是hide_button
+          hideButton();
+          await ScreenBrightness.setScreenBrightness(screenBrightness);
         }
-        if (event['tick'] >= 5) {
-          if (currentStatus.value == Status.show_button) {
-            // 有可能是退到后台再回来，此时currentStatus已经是hide_button
-            hideButton();
-            await ScreenBrightness.setScreenBrightness(screenBrightness);
-          }
-          _service.invoke('stopHideButtonTimer');
-        }
-      });
+        timer.cancel();
+      }
+    });
     if (isPress) {
       _longPressTimer =
           Timer.periodic(const Duration(milliseconds: 10), (final timer) {
@@ -169,10 +178,11 @@ class FocusController extends BaseController {
     disposeAll();
     NotificationService()
         .cancelNotification(NotificationPayload.backToFocus.index);
+    print('取消backToFocus通知');
     final arguments = {
       ArgumentKeys.focusTime: TimeUtil.convertTimeToText(
-        (staticTime - countDown.value) ~/ 60,
-        (staticTime - countDown.value) % 60,
+        (_staticTime - countDown.value) ~/ 60,
+        (_staticTime - countDown.value) % 60,
       ),
     };
     Get.offNamed(Routes.result, arguments: arguments);
@@ -181,6 +191,7 @@ class FocusController extends BaseController {
   void goBack() {
     disposeAll();
     NotificationService().cancelAllNotifications();
+    print('取消所有通知');
     Get.back();
   }
 
@@ -191,9 +202,11 @@ class FocusController extends BaseController {
     SPUtils.getInstance().setRestStartTimeTemp(
       restStartTime: DateFormat('MM-dd HH:mm').format(DateTime.now()),
     );
+    sendFinishFocusMsg(animateTime + _staticTime);
     animateTimer = Timer.periodic(const Duration(seconds: 1), (final timer) {
       animateRemainTime =
           animateTime - timer.tick < 0 ? 0 : animateTime - timer.tick;
+      print('animateTimer: ${timer.tick}');
       if (timer.tick >= animateTime) {
         timer.cancel();
         animateTimerFinish.value = true;
@@ -209,39 +222,42 @@ class FocusController extends BaseController {
         TimeUtil.convertTime(countDown.value ~/ 60, countDown.value % 60);
   }
 
-  ///passedTime：如果在过渡动画时息屏或者退到后台，记录已过的时间，在初始时间上减去该时间
-  void _initTimer(final int passedTime) {
-    setCountDownValue(staticTime - passedTime);
-    _startCountDown(staticTime - passedTime);
+  ///animatePassedTime：如果在过渡动画时息屏或者退到后台，记录已过的时间，在初始时间上减去该时间
+  void _initTimer(final int animatePassedTime) {
+    print('初始化倒计时timer');
+    setCountDownValue(
+      _staticTime - animatePassedTime < 0 ? 0 : _staticTime - animatePassedTime,
+    );
+    _startCountDown(countDown.value);
   }
 
-  void _startCountDown(final curTime) {
+  Future<void> _startCountDown(final curTime) async {
     _countDownTimerStarted = true;
-    NotificationService()
+    await NotificationService()
         .cancelNotification(NotificationPayload.finishFocus.index);
-    sendFinishFocusMsg(countDown.value);
-    _service
-      ..invoke('startFocusCountDownTimer')
-      ..on('focusCountDown').listen((final event) {
-        if (event == null) {
-          return;
+    print('_startCountDown取消finishFocus通知');
+    sendFinishFocusMsg(curTime);
+    print('curTime: ${curTime.toString()}');
+    _countDownTimer = Timer.periodic(const Duration(seconds: 1), (final timer) {
+      print(countDown.value.toString());
+      if (countDown.value <= 0) {
+        timer.cancel();
+        if (!(isInBackGround ?? false)) {
+          //如果在前台取消通知
+          NotificationService()
+              .cancelNotification(NotificationPayload.finishFocus.index);
+          print('_countDownTimer取消finishFocus通知');
         }
-        setCountDownValue(curTime - event['tick'] as int);
-        if (countDown.value <= 0) {
-          _service.invoke('stopFocusCountDownTimer');
-          if (!(isInBackGround ?? false)) {
-            //如果在前台取消通知
-            NotificationService()
-                .cancelNotification(NotificationPayload.finishFocus.index);
-          }
-          gotoNextPage();
-        }
-      });
+        gotoNextPage();
+        return;
+      }
+      setCountDownValue(curTime - timer.tick);
+    });
   }
 
   void _stopCountDownTimer() {
     _countDownTimerStarted = false;
-    _service.invoke('stopFocusCountDownTimer');
+    _countDownTimer?.cancel();
   }
 
   void _initSensor() {
@@ -268,14 +284,22 @@ class FocusController extends BaseController {
     });
   }
 
+  Future<void> _stopSensor() async {
+    await _streamSubscription?.cancel();
+    _sensorTimer?.cancel();
+  }
+
   @override
   Future<void> onPaused() async {
     super.onPaused();
     isInBackGround = true;
+    SPUtils.getInstance().setFocusPausedTime(
+      focusPausedTime: DateTime.now().millisecondsSinceEpoch,
+    );
+    _stopCountDownTimer();
     if (animateTimerFinish.value) {
       //过渡动画播放完成
-      await _streamSubscription?.cancel();
-      _sensorTimer?.cancel();
+      await _stopSensor();
       hideButton();
     }
     // if (countDown.value <= interruptTime * 2 + 1) {
@@ -311,28 +335,27 @@ class FocusController extends BaseController {
                 ..invoke('stopFocusPageSendMsgTimer');
               await NotificationService()
                   .cancelNotification(NotificationPayload.backToFocus.index);
+              print('onPaused取消backToFocus通知');
             } else if (event['tick'] >= interruptTime && !isLocked) {
               //app进入后台并且亮屏超过5s，立即发消息通知
               _service.invoke('stopFocusPageBackgroundTimer');
             }
           });
       }
-      _service
+      _sendMsgTimer = Timer.periodic(const Duration(seconds: 1), (final timer) {
         // 消息通知5s后，没回到专注鱼，退出专注-退回到APP主页
-        ..invoke('startFocusPageSendMsgTimer')
-        ..on('focusPageSendMsg').listen((final event) {
-          if (event == null) {
-            return;
-          }
-          if (event['tick'] > interruptTime * 2 + animateRemainTime) {
-            _service.invoke('stopFocusPageSendMsgTimer');
-            goBack();
-          }
-        });
+        if (timer.tick > interruptTime * 2 + animateRemainTime) {
+          timer.cancel();
+          goBack();
+        }
+      });
     }
   }
 
   void sendBackToFocusMsg(final int delay) {
+    if (delay <= 0) {
+      return;
+    }
     NotificationService().zonedScheduleNotification(
       NotificationPayload.backToFocus.index,
       '专注鱼',
@@ -343,12 +366,16 @@ class FocusController extends BaseController {
   }
 
   void sendFinishFocusMsg(final int delay) {
+    if (delay <= 0) {
+      return;
+    }
+    print('sendFinishFocusMsg');
     NotificationService().zonedScheduleNotification(
       NotificationPayload.finishFocus.index,
       '专注鱼',
       '恭喜你完成了25分钟专注，休息一下吧。',
       NotificationPayload.finishFocus.toString(),
-      delay + 1, //发送通知时间比专注时间设置的稍长一点
+      delay + 2, //发送通知时间比专注时间设置的稍长一点，否则会导致在专注页面也会发通知
     );
   }
 
@@ -371,33 +398,49 @@ class FocusController extends BaseController {
   @override
   Future<void> onResumed() async {
     super.onResumed();
+    print('onResumed');
+    await NotificationService()
+        .cancelNotification(NotificationPayload.backToFocus.index);
+    print('onResumed取消backToFocus通知');
+    //如果是从paused而不是inactive回来并且倒计时没有启动
+    if ((isInBackGround ?? false) && !(_countDownTimerStarted ?? false)) {
+      backgroundLastTime = ((DateTime.now().millisecondsSinceEpoch -
+                  SPUtils.getInstance().getFocusPausedTime()) /
+              1000)
+          .round();
+      setCountDownValue(
+        countDown.value - backgroundLastTime < 0
+            ? 0
+            : countDown.value - backgroundLastTime,
+      );
+      await _startCountDown(countDown.value);
+    }
     await ScreenBrightness.setScreenBrightness(screenBrightness);
-    isInBackGround = false;
     if (!animateTimerFinish.value) {
       return;
     }
-    _initSensor();
-    _service
-      ..invoke('stopFocusPageSendMsgTimer')
-      ..invoke('stopFocusPageBackgroundTimer');
-    await NotificationService().cancelAllNotifications();
+    if (isInBackGround ?? false) {
+      _initSensor();
+    }
+    _sendMsgTimer?.cancel();
+    _service.invoke('stopFocusPageBackgroundTimer');
+    isInBackGround = false;
   }
 
   @override
   void onClose() {
     disposeAll();
     NotificationService().cancelAllNotifications();
+    print('onClose取消所有通知');
     super.onClose();
   }
 
   void disposeAll() {
-    _streamSubscription?.cancel();
-    _sensorTimer?.cancel();
+    _stopSensor();
     _stopCountDownTimer();
-    _service
-      ..invoke('stopHideButtonTimer')
-      ..invoke('stopFocusPageSendMsgTimer')
-      ..invoke('stopFocusPageBackgroundTimer');
+    _hideButtonTimer?.cancel();
+    _sendMsgTimer?.cancel();
+    _service.invoke('stopFocusPageBackgroundTimer');
     _longPressTimer?.cancel();
     animateTimer?.cancel();
     interruptTimer?.cancel();

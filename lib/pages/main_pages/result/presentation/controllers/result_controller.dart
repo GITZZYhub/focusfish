@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:common/constants/argument_keys.dart';
 import 'package:common/controller/base_controller.dart';
 import 'package:common/utils/sp_utils/sp_utils.dart';
 import 'package:common/utils/time_util.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:getx/getx.dart';
 
 import '../../../../../routes/app_pages.dart';
@@ -13,18 +14,24 @@ class ResultController extends BaseController {
 
   final IResultRepository resultRepository;
 
-  final _service = FlutterBackgroundService();
+  // 倒计时
+  Timer? _countDownTimer;
 
   late final List<dynamic> audioList;
 
   //倒计时总时间
-  final staticTime = 5 * 60;
+  final _staticTime = 5 * 60;
 
   //倒计时剩余时间
   final countDown = 0.obs;
 
   //ui显示的时间
   final time = ''.obs;
+
+  // 处于后台的时间长度
+  int backgroundLastTime = 0;
+
+  bool? isInBackGround;
 
   void goBack() {
     Get.back();
@@ -46,26 +53,50 @@ class ResultController extends BaseController {
   Future<void> onInit() async {
     super.onInit();
     audioList = SPUtils.getInstance().getAudioList();
-    _initTimer();
+    _initTimer(_staticTime);
   }
 
-  void _initTimer() {
-    countDown.value = staticTime;
+  void _initTimer(final int curTime) {
+    countDown.value = curTime;
     time.value =
         TimeUtil.convertTime(countDown.value ~/ 60, countDown.value % 60);
-    _service
-      ..invoke('startResultPageTimer')
-      ..on('resultPage').listen((final event) {
-        if (event == null) {
-          return;
-        }
-        countDown.value = staticTime - event['tick'] as int;
-        time.value =
-            TimeUtil.convertTime(countDown.value ~/ 60, countDown.value % 60);
-        if (countDown.value <= 0) {
-          gotoFocus();
-        }
-      });
+    _countDownTimer = Timer.periodic(const Duration(seconds: 1), (final timer) {
+      countDown.value = curTime - timer.tick;
+      time.value =
+          TimeUtil.convertTime(countDown.value ~/ 60, countDown.value % 60);
+      if (countDown.value <= 0) {
+        timer.cancel();
+        gotoFocus();
+      }
+    });
+  }
+
+  @override
+  void onPaused() {
+    super.onPaused();
+    isInBackGround = true;
+    SPUtils.getInstance().setResultPausedTime(
+      resultPausedTime: DateTime.now().millisecondsSinceEpoch,
+    );
+    _countDownTimer?.cancel();
+  }
+
+  @override
+  void onResumed() {
+    super.onResumed();
+    //如果是从paused而不是inactive回来
+    if (isInBackGround ?? false) {
+      backgroundLastTime = ((DateTime.now().millisecondsSinceEpoch -
+                  SPUtils.getInstance().getResultPausedTime()) /
+              1000)
+          .round();
+      _initTimer(
+        countDown.value - backgroundLastTime < 0
+            ? 0
+            : countDown.value - backgroundLastTime,
+      );
+    }
+    isInBackGround = false;
   }
 
   @override
@@ -75,7 +106,7 @@ class ResultController extends BaseController {
 
   @override
   void onClose() {
-    _service.invoke('stopResultPageTimer');
+    _countDownTimer?.cancel();
     super.onClose();
   }
 }

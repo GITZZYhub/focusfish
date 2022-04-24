@@ -109,7 +109,8 @@ class SPUtils {
     _prefs?.setString(SPKeys.restStartTime, restStartTime);
   }
 
-  String getRestStartTimeTemp() => _prefs?.getString(SPKeys.restStartTime) ?? '';
+  String getRestStartTimeTemp() =>
+      _prefs?.getString(SPKeys.restStartTime) ?? '';
 
   //记录用户专注&休息的开始时间，只有在完成休息时才记录
   void setRestStartTime({required final String restStartTime}) {
@@ -124,6 +125,24 @@ class SPUtils {
   }
 
   String getRestEndTime() => _prefs?.getString(SPKeys.restEndTime) ?? '';
+
+  ///--------------------------------------------------------------------------
+
+  ///------------------ 倒计时相关 ---------------------------------------------
+
+  //记录focus页面退到后台的时间戳
+  void setFocusPausedTime({required final int focusPausedTime}) {
+    _prefs?.setInt(SPKeys.focusPausedTime, focusPausedTime);
+  }
+
+  int getFocusPausedTime() => _prefs?.getInt(SPKeys.focusPausedTime) ?? 0;
+
+  //记录result页面退到后台的时间戳
+  void setResultPausedTime({required final int resultPausedTime}) {
+    _prefs?.setInt(SPKeys.resultPausedTime, resultPausedTime);
+  }
+
+  int getResultPausedTime() => _prefs?.getInt(SPKeys.resultPausedTime) ?? 0;
 
   ///--------------------------------------------------------------------------
 }

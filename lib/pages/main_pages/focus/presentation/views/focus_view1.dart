@@ -112,16 +112,16 @@ class RouteAwareFocusViewState extends State<RouteAwareFocusView>
                 value: widget.controller.circleProgressValue.value,
               ),
             ),
-            Center(
-              child: ProgressBar(
-                backgroundColor: Colors.blue,
-                valueColor: const AlwaysStoppedAnimation(Colors.grey),
-                value: 1 -
-                    widget.controller.countDown.value /
-                        widget.controller.staticTime,
-                timeText: widget.controller.time.value,
-              ),
-            ),
+            // Center(
+            //   child: ProgressBar(
+            //     backgroundColor: Colors.blue,
+            //     valueColor: const AlwaysStoppedAnimation(Colors.grey),
+            //     value: 1 -
+            //         widget.controller.countDown.value /
+            //             widget.controller.staticTime,
+            //     timeText: widget.controller.time.value,
+            //   ),
+            // ),
             if (widget.controller.currentStatus.value == Status.show_button)
               const Align(
                 alignment: AlignmentDirectional.bottomCenter,

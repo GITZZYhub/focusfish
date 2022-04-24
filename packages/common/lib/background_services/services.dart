@@ -54,63 +54,7 @@ void onStartService(final ServiceInstance service) {
   service.on('stopService').listen((final event) {
     service.stopSelf();
   });
-  focusCountDownTimerInit(service);
-  hideButtonTimerInit(service);
   focusPageBackgroundTimerInit(service);
-  focusPageSendMsgTimerInit(service);
-  resultPageTimerInit(service);
-}
-
-///专注页面倒计时
-Timer? focusCountDownTimer;
-
-void focusCountDownTimerInit(final ServiceInstance service) {
-  service.on('startFocusCountDownTimer').listen((final event) {
-    focusCountDownTimer =
-        Timer.periodic(const Duration(seconds: 1), (final timer) async {
-      if (focusCountDownTimer == null) {
-        timer.cancel();
-        return;
-      }
-      service.invoke(
-        'focusCountDown',
-        {
-          'tick': timer.tick,
-        },
-      );
-    });
-  });
-
-  service.on('stopFocusCountDownTimer').listen((final event) {
-    focusCountDownTimer?.cancel();
-    focusCountDownTimer = null;
-  });
-}
-
-/// 隐藏专注页面长按按钮计时器
-Timer? hideButtonTimer;
-
-void hideButtonTimerInit(final ServiceInstance service) {
-  service.on('startHideButtonTimer').listen((final event) {
-    hideButtonTimer =
-        Timer.periodic(const Duration(milliseconds: 1000), (final timer) async {
-      if (hideButtonTimer == null) {
-        timer.cancel();
-        return;
-      }
-      service.invoke(
-        'hideButton',
-        {
-          'tick': timer.tick,
-        },
-      );
-    });
-  });
-
-  service.on('stopHideButtonTimer').listen((final event) {
-    hideButtonTimer?.cancel();
-    hideButtonTimer = null;
-  });
 }
 
 /// 专注页面进入后台倒计时
@@ -137,58 +81,5 @@ void focusPageBackgroundTimerInit(final ServiceInstance service) {
   service.on('stopFocusPageBackgroundTimer').listen((final event) {
     focusPageBackgroundTimer?.cancel();
     focusPageBackgroundTimer = null;
-  });
-}
-
-/// 专注页面进入后台发送通知等待倒计时
-/// 消息通知5s后，没回到专注鱼，退出专注-退回到APP主页
-Timer? focusPageSendMsgTimer;
-
-void focusPageSendMsgTimerInit(final ServiceInstance service) {
-  service.on('startFocusPageSendMsgTimer').listen((final event) {
-    focusPageSendMsgTimer =
-        Timer.periodic(const Duration(seconds: 1), (final timer) async {
-      if (focusPageSendMsgTimer == null) {
-        timer.cancel();
-        return;
-      }
-      service.invoke(
-        'focusPageSendMsg',
-        {
-          'tick': timer.tick,
-        },
-      );
-    });
-  });
-
-  service.on('stopFocusPageSendMsgTimer').listen((final event) {
-    focusPageSendMsgTimer?.cancel();
-    focusPageSendMsgTimer = null;
-  });
-}
-
-/// 音频选择页面倒计时
-Timer? resultPageTimer;
-
-void resultPageTimerInit(final ServiceInstance service) {
-  service.on('startResultPageTimer').listen((final event) {
-    resultPageTimer =
-        Timer.periodic(const Duration(seconds: 1), (final timer) async {
-          if (resultPageTimer == null) {
-            timer.cancel();
-            return;
-          }
-          service.invoke(
-            'resultPage',
-            {
-              'tick': timer.tick,
-            },
-          );
-        });
-  });
-
-  service.on('stopResultPageTimer').listen((final event) {
-    resultPageTimer?.cancel();
-    resultPageTimer = null;
   });
 }
